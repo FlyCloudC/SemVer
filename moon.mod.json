@@ -2,9 +2,11 @@
   "name": "FlyCloudC/SemVer",
   "version": "0.1.0",
   "readme": "README.md",
-  "repository": "",
+  "repository": "https://github.com/FlyCloudC/SemVer",
   "license": "Apache-2.0",
-  "keywords": [],
-  "description": "",
+  "keywords": [
+    "Semantic Versioning"
+  ],
+  "description": "Parse semantic versioning",
   "source": "src"
 }
