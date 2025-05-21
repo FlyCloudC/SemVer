@@ -44,11 +44,18 @@ test "compare" {
   let v2_0_0 = m("2", "0", "0")
   let v2_1_0 = m("2", "1", "0")
   let v2_1_1 = m("2", "1", "1")
+  assert_true!(v1_0_0 < v2_0_0)
+  assert_true!(v2_0_0 < v2_1_0)
+  assert_true!(v2_1_0 < v2_1_1)
+  assert_false!(v1_0_0 == v2_0_0)
+  assert_false!(v2_0_0 == v2_1_0)
+  assert_false!(v2_1_0 == v2_1_1)
   let v1_0_0_alpha = pre([Alpha("alpha")])
   let v1_0_0_alpha_beta = pre([Alpha("alpha"), Alpha("beta")])
   let v1_0_0_beta = pre([Alpha("beta")])
   let v1_0_0_beta_1 = pre([Alpha("beta"), Num("1")])
   let v1_0_0_beta_2 = pre([Alpha("beta"), Num("2")])
+  let v1_0_0_beta_12 = pre([Alpha("beta"), Num("12")])
   let v1_0_0_build = {
     major: "1",
     minor: "0",
@@ -56,18 +63,13 @@ test "compare" {
     pre_release: None,
     build: Some(["build1919"]),
   }
-  assert_false!(v1_0_0 == v2_0_0)
-  assert_false!(v2_0_0 == v2_1_0)
-  assert_false!(v2_1_0 == v2_1_1)
   assert_false!(v1_0_0 == v1_0_0_beta)
-  assert_true!(v1_0_0 < v2_0_0)
-  assert_true!(v2_0_0 < v2_1_0)
-  assert_true!(v2_1_0 < v2_1_1)
   assert_true!(v1_0_0 == v1_0_0_build)
   assert_true!(v1_0_0_alpha < v1_0_0_alpha_beta)
   assert_true!(v1_0_0_alpha_beta < v1_0_0_beta)
   assert_true!(v1_0_0_beta < v1_0_0_beta_1)
   assert_true!(v1_0_0_beta_1 < v1_0_0_beta_2)
+  assert_true!(v1_0_0_beta_2 < v1_0_0_beta_12)
 }
 
 ///|
