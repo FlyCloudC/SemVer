@@ -1,0 +1,40 @@
+package "FlyCloudC/SemVer"
+
+import(
+  "moonbitlang/core/string"
+)
+
+// Values
+fn is_pre_release(T) -> Bool
+
+fn is_valid(@string.StringView) -> Bool
+
+fn parse(@string.StringView) -> T!ParseError
+
+// Types and methods
+pub enum Identifier {
+  Num(@string.StringView)
+  Alpha(@string.StringView)
+}
+impl Eq for Identifier
+
+type ParseError
+
+pub struct T {
+  major : @string.StringView
+  minor : @string.StringView
+  patch : @string.StringView
+  pre_release : Array[Identifier]?
+  build : Array[@string.StringView]?
+}
+impl T {
+  is_pre_release(Self) -> Bool
+}
+impl Compare for T
+impl Eq for T
+impl Show for T
+
+// Type aliases
+
+// Traits
+
