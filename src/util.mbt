@@ -34,12 +34,9 @@ pub impl Compare for T with compare(self, other) {
       let len_a = a.length()
       let len_b = b.length()
       let len_min = if len_a < len_b { len_a } else { len_b }
-      for i in 0..<len_min {
-        let x = a[i].compare(b[i])
-        guard x == 0 else { return x }
-
-      }
-      a.length().compare(b.length())
+      let x = a[:len_min].compare(b[:len_min])
+      guard x == 0 else { return x }
+      len_a.compare(len_b)
     }
   }
 }
