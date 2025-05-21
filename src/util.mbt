@@ -59,6 +59,14 @@ impl Compare for Identifier with compare(self, other) {
 }
 
 ///|
+priv type S View
+
+///|
+impl Show for S with output(self, logger) {
+  logger.write_string(self._.to_string())
+}
+
+///|
 pub impl Show for T with output(self, logger) {
   logger
   ..write_string(self.major.to_string())
@@ -70,13 +78,15 @@ pub impl Show for T with output(self, logger) {
     logger
     ..write_char('-')
     ..write_iter(
-      x.iter().map(fn { Num(x) | Alpha(x) => x }),
+      x.iter().map(fn { Num(x) | Alpha(x) => S(x) }),
       prefix="",
       suffix="",
       sep=".",
     )
   }
   if self.build is Some(x) {
-    logger..write_char('+')..write_iter(x.iter(), prefix="", suffix="", sep=".")
+    logger
+    ..write_char('+')
+    ..write_iter(x.iter().map(S(_)), prefix="", suffix="", sep=".")
   }
 }
