@@ -49,13 +49,22 @@ impl Compare for Identifier with compare(self, other) {
   match (self, other) {
     (Alpha(_), Num(_)) => 1
     (Num(_), Alpha(_)) => -1
-    (Alpha(a), Alpha(b)) => a.compare(b)
-    (Num(a), Num(b)) => {
-      let x = a.length().compare(b.length())
+    (Alpha(a), Alpha(b)) => {
+      let len_a = a.length()
+      let len_b = b.length()
+      let len_min = if len_a < len_b { len_a } else { len_b }
+      let x = a.charcodes(end=len_min).compare(b.charcodes(end=len_min))
       guard x == 0 else { return x }
-      a.compare(b)
+      len_a.compare(len_b)
     }
+    (Num(a), Num(b)) => a.compare(b)
   }
+}
+
+///|
+test {
+  inspect!("alpha".compare("beta"), content="1")
+  inspect!("alph".compare("beta"), content="-1")
 }
 
 ///|
