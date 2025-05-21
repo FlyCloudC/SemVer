@@ -17,7 +17,8 @@ pub struct T {
 }
 
 ///|
-type! ParseError View
+/// Indicates the position where failure occurred.
+pub type! ParseError Int derive(Show)
 
 ///|
 typealias P[A] = (A, View)

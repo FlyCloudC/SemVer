@@ -1,21 +1,30 @@
 ///|
+priv type! Fail View
+
+///|
 /// Parse and handle semantic version strings according to
 /// the Semantic Versioning specification (https://semver.org/).
+/// 
+/// If parsing fails, a `ParseError` is raised indicating the position of the error.
 pub fn parse(view : View) -> T!ParseError {
-  let (major, rest) = parse_numeric_identifier!(view)
-  guard rest is ['.', .. rest] else { raise ParseError(rest) }
-  let (minor, rest) = parse_numeric_identifier!(rest)
-  guard rest is ['.', .. rest] else { raise ParseError(rest) }
-  let (patch, rest) = parse_numeric_identifier!(rest)
-  //
-  let (pre_release, rest) = parse_pre_release!(rest)
-  let (build, rest) = parse_build!(rest)
-  guard rest.is_empty() else { raise ParseError(rest) }
-  { major, minor, patch, pre_release, build }
+  try {
+    let (major, rest) = parse_numeric_identifier!(view)
+    guard rest is ['.', .. rest] else { raise Fail(rest) }
+    let (minor, rest) = parse_numeric_identifier!(rest)
+    guard rest is ['.', .. rest] else { raise Fail(rest) }
+    let (patch, rest) = parse_numeric_identifier!(rest)
+    //
+    let (pre_release, rest) = parse_pre_release!(rest)
+    let (build, rest) = parse_build!(rest)
+    guard rest.is_empty() else { raise Fail(rest) }
+    { major, minor, patch, pre_release, build }
+  } catch {
+    Fail(x) => raise ParseError(view.length() - x.length())
+  }
 }
 
 ///|
-fn parse_pre_release(view : View) -> P[Array[Identifier]?]!ParseError {
+fn parse_pre_release(view : View) -> P[Array[Identifier]?]!Fail {
   guard view is ['-', .. rest] else { return (None, view) }
   fn f(view : View) -> _!_ {
     let rest = view
@@ -24,11 +33,11 @@ fn parse_pre_release(view : View) -> P[Array[Identifier]?]!ParseError {
         continue end + 1, is_digit, rest
       end, _, ['a'..='z' | 'A'..='Z' | '-', .. rest] =>
         continue end + 1, false, rest
-      0, _, _ => raise ParseError(view)
+      0, _, _ => raise Fail(view)
       end, is_digit, rest => {
         let result = view.charcodes(end~)
         if is_digit {
-          guard is_numeric_identifier(view) else { raise ParseError(view) }
+          guard is_numeric_identifier(view) else { raise Fail(view) }
           (Num(result), rest)
         } else {
           (Alpha(result), rest)
@@ -41,14 +50,14 @@ fn parse_pre_release(view : View) -> P[Array[Identifier]?]!ParseError {
 }
 
 ///|
-fn parse_build(view : View) -> P[Array[View]?]!ParseError {
+fn parse_build(view : View) -> P[Array[View]?]!Fail {
   guard view is ['+', .. rest] else { return (None, view) }
   fn f(view : View) -> _!_ {
     let rest = view
     loop 0, rest {
       end, ['0'..='9' | 'a'..='z' | 'A'..='Z' | '-', .. rest] =>
         continue end + 1, rest
-      0, _ => raise ParseError(view)
+      0, _ => raise Fail(view)
       end, rest => (view.charcodes(end~), rest)
     }
   }
@@ -57,7 +66,7 @@ fn parse_build(view : View) -> P[Array[View]?]!ParseError {
 }
 
 ///|
-fn parse_numeric_identifier(view : View) -> P[View]!ParseError {
+fn parse_numeric_identifier(view : View) -> P[View]!Fail {
   // <numeric identifier> ::= "0"
   //                        | <positive digit>
   //                        | <positive digit> <digits>
@@ -68,15 +77,15 @@ fn parse_numeric_identifier(view : View) -> P[View]!ParseError {
         end, ['0'..='9', .. rest] => continue end + 1, rest
         end, rest => (view.charcodes(end~), rest)
       }
-    _ => raise ParseError(view)
+    _ => raise Fail(view)
   }
 }
 
 ///|
 fn parse_dot_list[A](
   str : View,
-  parse : (View) -> P[A]!ParseError
-) -> P[Array[A]]!ParseError {
+  parse : (View) -> P[A]!Fail
+) -> P[Array[A]]!Fail {
   let (first, rest) = parse!(str)
   let result = [first]
   loop rest {
