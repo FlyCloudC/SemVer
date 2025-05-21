@@ -18,7 +18,8 @@ pub enum Identifier {
 }
 impl Eq for Identifier
 
-type ParseError
+pub type! ParseError Int
+impl Show for ParseError
 
 pub struct T {
   major : @string.StringView
