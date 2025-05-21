@@ -6,7 +6,7 @@ test "parse success" {
 
   let v1 = "1.0.1-alpha"
   assert_eq!(v1, f(v1))
-  let v2 = "1.0.1-alpha"
+  let v2 = "1.0.11-alpha"
   assert_eq!(v2, f(v2))
   let v3 = "1.0.0-beta.22+exp.sha.51fff85"
   assert_eq!(v3, f(v3))
@@ -32,41 +32,23 @@ test "parse fail" {
 
 ///|
 test "compare" {
-  let v1_0_0 = {
-    major: "1",
-    minor: "0",
-    patch: "0",
-    pre_release: None,
-    build: None,
+  fn m(major, minor, patch) {
+    { major, minor, patch, pre_release: None, build: None }
   }
-  let v2_0_0 = {
-    major: "2",
-    minor: "0",
-    patch: "0",
-    pre_release: None,
-    build: None,
+
+  fn pre(x) {
+    { major: "1", minor: "0", patch: "0", pre_release: Some(x), build: None }
   }
-  let v2_1_0 = {
-    major: "2",
-    minor: "1",
-    patch: "0",
-    pre_release: None,
-    build: None,
-  }
-  let v2_1_1 = {
-    major: "2",
-    minor: "1",
-    patch: "1",
-    pre_release: None,
-    build: None,
-  }
-  let v1_0_0_pre_release = {
-    major: "1",
-    minor: "0",
-    patch: "0",
-    pre_release: Some([Alpha("alpha114")]),
-    build: None,
-  }
+
+  let v1_0_0 = m("1", "0", "0")
+  let v2_0_0 = m("2", "0", "0")
+  let v2_1_0 = m("2", "1", "0")
+  let v2_1_1 = m("2", "1", "1")
+  let v1_0_0_alpha = pre([Alpha("alpha")])
+  let v1_0_0_alpha_beta = pre([Alpha("alpha"), Alpha("beta")])
+  let v1_0_0_beta = pre([Alpha("beta")])
+  let v1_0_0_beta_1 = pre([Alpha("beta"), Num("1")])
+  let v1_0_0_beta_2 = pre([Alpha("beta"), Num("2")])
   let v1_0_0_build = {
     major: "1",
     minor: "0",
@@ -77,12 +59,15 @@ test "compare" {
   assert_false!(v1_0_0 == v2_0_0)
   assert_false!(v2_0_0 == v2_1_0)
   assert_false!(v2_1_0 == v2_1_1)
-  assert_false!(v1_0_0 == v1_0_0_pre_release)
+  assert_false!(v1_0_0 == v1_0_0_beta)
   assert_true!(v1_0_0 < v2_0_0)
   assert_true!(v2_0_0 < v2_1_0)
   assert_true!(v2_1_0 < v2_1_1)
-  assert_true!(v1_0_0_pre_release < v1_0_0)
   assert_true!(v1_0_0 == v1_0_0_build)
+  assert_true!(v1_0_0_alpha < v1_0_0_alpha_beta)
+  assert_true!(v1_0_0_alpha_beta < v1_0_0_beta)
+  assert_true!(v1_0_0_beta < v1_0_0_beta_1)
+  assert_true!(v1_0_0_beta_1 < v1_0_0_beta_2)
 }
 
 ///|
