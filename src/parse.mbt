@@ -37,7 +37,7 @@ fn parse_pre_release(view : View) -> P[Array[Identifier]?]!Fail {
       end, is_digit, rest => {
         let result = view.charcodes(end~)
         if is_digit {
-          guard is_numeric_identifier(view) else { raise Fail(view) }
+          guard is_numeric_identifier(result) else { raise Fail(view) }
           (Num(result), rest)
         } else {
           (Alpha(result), rest)
