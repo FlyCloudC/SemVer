@@ -44,6 +44,7 @@ pub impl Compare for T with compare(self, other) {
 ///|
 impl Compare for Identifier with compare(self, other) {
   match (self, other) {
+    (Num(a), Num(b)) => a.compare(b)
     (Alpha(_), Num(_)) => 1
     (Num(_), Alpha(_)) => -1
     (Alpha(a), Alpha(b)) => {
@@ -54,7 +55,6 @@ impl Compare for Identifier with compare(self, other) {
       guard x == 0 else { return x }
       len_a.compare(len_b)
     }
-    (Num(a), Num(b)) => a.compare(b)
   }
 }
 
