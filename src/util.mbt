@@ -62,12 +62,14 @@ impl Compare for Identifier with compare(self, other) {
 }
 
 ///|
-test {
-  inspect!("alpha".compare("beta"), content="1")
-  inspect!("alph".compare("beta"), content="-1")
+test "order" {
+  // The comparison of @string.View does not follow lexicographical order
+  inspect!("alpha"[:].compare("beta"), content="1")
+  inspect!("alph"[:].compare("beta"), content="-1")
 }
 
 ///|
+/// To avoid conversion that results in double quotes during output
 priv type S View
 
 ///|
