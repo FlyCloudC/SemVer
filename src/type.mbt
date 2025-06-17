@@ -18,13 +18,13 @@ pub struct T {
 
 ///|
 /// Indicates the position where failure occurred.
-pub type! ParseError Int derive(Show)
+pub suberror ParseError Int derive(Show)
 
 ///|
-typealias P[A] = (A, View)
+typealias (A, View) as P[A]
 
 ///|
-fn map[A, B](x : P[A], f : (A) -> B) -> P[B] {
+fn[A, B] map(x : P[A], f : (A) -> B) -> P[B] {
   let (a, rest) = x
   (f(a), rest)
 }

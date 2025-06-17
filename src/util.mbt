@@ -2,7 +2,11 @@
 /// Verify whether the string complies with
 /// the Semantic Versioning specification (https://semver.org/).
 pub fn is_valid(view : View) -> Bool {
-  parse?(view) is Ok(_)
+  try parse(view) catch {
+    _ => false
+  } else {
+    _ => true
+  }
 }
 
 ///|
@@ -61,8 +65,8 @@ impl Compare for Identifier with compare(self, other) {
 ///|
 test "order" {
   // The comparison of @string.View does not follow lexicographical order
-  inspect!("alpha"[:].compare("beta"), content="1")
-  inspect!("alph"[:].compare("beta"), content="-1")
+  inspect("alpha"[:].compare("beta"), content="1")
+  inspect("alph"[:].compare("beta"), content="-1")
 }
 
 ///|
@@ -71,7 +75,7 @@ priv type S View
 
 ///|
 impl Show for S with output(self, logger) {
-  logger.write_string(self._.to_string())
+  logger.write_string(self.inner().to_string())
 }
 
 ///|
@@ -86,7 +90,11 @@ pub impl Show for T with output(self, logger) {
     logger
     ..write_char('-')
     ..write_iter(
-      x.iter().map(fn { Num(x) | Alpha(x) => S(x) }),
+      x
+      .iter()
+      .map(x => match x {
+        Num(x) | Alpha(x) => S(x)
+      }),
       prefix="",
       suffix="",
       sep=".",

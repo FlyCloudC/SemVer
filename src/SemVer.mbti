@@ -5,11 +5,9 @@ import(
 )
 
 // Values
-fn is_pre_release(T) -> Bool
-
 fn is_valid(@string.StringView) -> Bool
 
-fn parse(@string.StringView) -> T!ParseError
+fn parse(@string.StringView) -> T raise ParseError
 
 // Types and methods
 pub enum Identifier {
@@ -18,7 +16,7 @@ pub enum Identifier {
 }
 impl Eq for Identifier
 
-pub type! ParseError Int
+pub suberror ParseError Int
 impl Show for ParseError
 
 pub struct T {
@@ -28,9 +26,7 @@ pub struct T {
   pre_release : Array[Identifier]?
   build : Array[@string.StringView]?
 }
-impl T {
-  is_pre_release(Self) -> Bool
-}
+fn T::is_pre_release(Self) -> Bool
 impl Compare for T
 impl Eq for T
 impl Show for T
