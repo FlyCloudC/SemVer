@@ -11,8 +11,8 @@ fn parse(@string.StringView) -> T raise ParseError
 
 // Types and methods
 pub enum Identifier {
-  Num(@string.StringView)
-  Alpha(@string.StringView)
+  Num(String)
+  Alpha(String)
 }
 impl Eq for Identifier
 
@@ -20,11 +20,11 @@ pub suberror ParseError Int
 impl Show for ParseError
 
 pub struct T {
-  major : @string.StringView
-  minor : @string.StringView
-  patch : @string.StringView
+  major : String
+  minor : String
+  patch : String
   pre_release : Array[Identifier]?
-  build : Array[@string.StringView]?
+  build : Array[String]?
 }
 fn T::is_pre_release(Self) -> Bool
 impl Compare for T

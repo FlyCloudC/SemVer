@@ -1,10 +1,10 @@
 ///|
 /// Verify whether the string complies with
 /// the Semantic Versioning specification (https://semver.org/).
-pub fn is_valid(view : View) -> Bool {
+pub fn is_valid(view : @string.View) -> Bool {
   try parse(view) catch {
     _ => false
-  } else {
+  } noraise {
     _ => true
   }
 }
@@ -65,13 +65,13 @@ impl Compare for Identifier with compare(self, other) {
 ///|
 test "order" {
   // The comparison of @string.View does not follow lexicographical order
-  inspect("alpha"[:].compare("beta"), content="1")
-  inspect("alph"[:].compare("beta"), content="-1")
+  inspect("alpha"[:].compare("beta"[:]), content="1")
+  inspect("alph"[:].compare("beta"[:]), content="-1")
 }
 
 ///|
 /// To avoid conversion that results in double quotes during output
-priv type S View
+priv type S @string.View
 
 ///|
 impl Show for S with output(self, logger) {
@@ -81,11 +81,11 @@ impl Show for S with output(self, logger) {
 ///|
 pub impl Show for T with output(self, logger) {
   logger
-  ..write_string(self.major.to_string())
+  ..write_string(self.major)
   ..write_char('.')
-  ..write_string(self.minor.to_string())
+  ..write_string(self.minor)
   ..write_char('.')
-  ..write_string(self.patch.to_string())
+  ..write_string(self.patch)
   if self.pre_release is Some(x) {
     logger
     ..write_char('-')
