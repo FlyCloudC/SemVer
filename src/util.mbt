@@ -70,12 +70,15 @@ test "order" {
 }
 
 ///|
-/// To avoid conversion that results in double quotes during output
-priv type S @string.View
-
-///|
-impl Show for S with output(self, logger) {
-  logger.write_string(self.inner().to_string())
+fn write_array_with_dot(self : &Logger, arr : Array[String]) -> Unit {
+  loop arr[:] {
+    [] => ()
+    [x] => self.write_string(x)
+    [x, .. rest] => {
+      self..write_string(x)..write_char('.')
+      continue rest
+    }
+  }
 }
 
 ///|
@@ -86,23 +89,13 @@ pub impl Show for T with output(self, logger) {
   ..write_string(self.minor)
   ..write_char('.')
   ..write_string(self.patch)
-  if self.pre_release is Some(x) {
-    logger
-    ..write_char('-')
-    ..write_iter(
-      x
-      .iter()
-      .map(x => match x {
-        Num(x) | Alpha(x) => S(x)
-      }),
-      prefix="",
-      suffix="",
-      sep=".",
-    )
+  if self.pre_release is Some(arr) {
+    let arr = arr.map(id => match id {
+      Num(x) | Alpha(x) => x
+    })
+    logger..write_char('-')..write_array_with_dot(arr)
   }
-  if self.build is Some(x) {
-    logger
-    ..write_char('+')
-    ..write_iter(x.iter().map(S(_)), prefix="", suffix="", sep=".")
+  if self.build is Some(arr) {
+    logger..write_char('+')..write_array_with_dot(arr)
   }
 }
