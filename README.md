@@ -4,29 +4,26 @@ A [semantic versioning](https://semver.org/) library for MoonBit.
 
 ## Features
 
-- validate and parse semantic versions
-- compare versions
-
-## Usage
-
+1. A struct representing a semantic version:
 ```mbt
-test "compare" {
-  try {
-    let v1 = parse!("1.0.0")
-    let v2 = parse!("1.2.3-alpha")
-    assert_true!(v1 > v2)
-  } catch {
-    _ => ()
-  }
+pub struct T {
+  major : String
+  minor : String
+  patch : String
+  pre_release : Array[Identifier]?
+  build : Array[String]?
 }
 ```
 
+2. From string:
 ```mbt
-test "error pos" {
-  try {
-    parse!("1.0.0.2") |> ignore
-  } catch {
-    ParseError(pos) => assert_eq!(pos, 5)
-  }
-}
+pub suberror ParseError Int derive(Show)
+fn parse(@string.StringView) -> T raise ParseError
+```
+If parsing fails, a `ParseError` is raised indicating the position of the error.
+
+3. Compare two semantic version:
+```mbt
+impl Eq for T
+impl Compare for T
 ```
