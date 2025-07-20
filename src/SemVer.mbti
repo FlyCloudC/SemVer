@@ -5,8 +5,6 @@ import(
 )
 
 // Values
-fn is_valid(@string.StringView) -> Bool
-
 fn parse(@string.StringView) -> T raise ParseError
 
 // Types and methods

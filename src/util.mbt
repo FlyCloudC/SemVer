@@ -1,15 +1,4 @@
 ///|
-/// Verify whether the string complies with
-/// the Semantic Versioning specification (https://semver.org/).
-pub fn is_valid(view : @string.View) -> Bool {
-  try parse(view) catch {
-    _ => false
-  } noraise {
-    _ => true
-  }
-}
-
-///|
 pub fn is_pre_release(self : T) -> Bool {
   self.pre_release is Some(_)
 }
