@@ -1,3 +1,4 @@
+// Generated using `moon info`, DON'T EDIT IT
 package "FlyCloudC/SemVer"
 
 import(
@@ -7,15 +8,16 @@ import(
 // Values
 fn parse(@string.StringView) -> T raise ParseError
 
+// Errors
+pub suberror ParseError Int
+impl Show for ParseError
+
 // Types and methods
 pub enum Identifier {
   Num(String)
   Alpha(String)
 }
 impl Eq for Identifier
-
-pub suberror ParseError Int
-impl Show for ParseError
 
 pub struct T {
   major : String

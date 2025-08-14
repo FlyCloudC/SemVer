@@ -34,7 +34,7 @@ fn parse_pre_release(view : @string.View) -> P[Array[Identifier]?] raise Fail {
         continue (end + 1, false, rest)
       (0, _, _) => raise Fail(view)
       (end, is_digit, rest) => {
-        let result = view.charcodes(end~)
+        let result = view.view(end_offset=end)
         if is_digit {
           guard is_numeric_identifier(result) else { raise Fail(view) }
           (Num(result.to_string()), rest)
@@ -56,7 +56,7 @@ fn parse_build(view : @string.View) -> P[Array[String]?] raise Fail {
       (end, ['0'..='9' | 'a'..='z' | 'A'..='Z' | '-', .. rest]) =>
         continue (end + 1, rest)
       (0, _) => raise Fail(view)
-      (end, rest) => (view.charcodes(end~).to_string(), rest)
+      (end, rest) => (view.view(end_offset=end).to_string(), rest)
     }
   }
 
@@ -69,11 +69,11 @@ fn parse_numeric_identifier(view : @string.View) -> P[String] raise Fail {
   //                        | <positive digit>
   //                        | <positive digit> <digits>
   match view {
-    ['0', .. rest] => (view.charcodes(end=1).to_string(), rest)
+    ['0', .. rest] => (view.view(end_offset=1).to_string(), rest)
     ['1'..='9', .. rest] =>
       loop (1, rest) {
         (end, ['0'..='9', .. rest]) => continue (end + 1, rest)
-        (end, rest) => (view.charcodes(end~).to_string(), rest)
+        (end, rest) => (view.view(end_offset=end).to_string(), rest)
       }
     _ => raise Fail(view)
   }
@@ -82,7 +82,7 @@ fn parse_numeric_identifier(view : @string.View) -> P[String] raise Fail {
 ///|
 fn[A] parse_dot_list(
   view : @string.View,
-  parse : (@string.View) -> P[A] raise Fail
+  parse : (@string.View) -> P[A] raise Fail,
 ) -> P[Array[A]] raise Fail {
   let (first, rest) = parse(view)
   let result = [first]

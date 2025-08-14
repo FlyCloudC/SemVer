@@ -1,6 +1,7 @@
 ///|
+#callsite(autofill(loc))
 #coverage.skip
-fn assert_valid(v : String, loc~ : SourceLoc = _) -> Unit raise {
+fn assert_valid(v : String, loc~ : SourceLoc) -> Unit raise {
   try parse(v).to_string() catch {
     ParseError(pos) => fail("Err at \{pos}", loc~)
   } noraise {
@@ -9,8 +10,9 @@ fn assert_valid(v : String, loc~ : SourceLoc = _) -> Unit raise {
 }
 
 ///|
+#callsite(autofill(loc))
 #coverage.skip
-fn fail_pos(v : String, loc~ : SourceLoc = _) -> Int raise {
+fn fail_pos(v : String, loc~ : SourceLoc) -> Int raise {
   try parse(v) catch {
     ParseError(pos) => pos
   } noraise {
@@ -19,8 +21,9 @@ fn fail_pos(v : String, loc~ : SourceLoc = _) -> Int raise {
 }
 
 ///|
+#callsite(autofill(loc))
 #coverage.skip
-fn assert_le(a : T, b : T, loc~ : SourceLoc = _) -> Unit raise {
+fn assert_le(a : T, b : T, loc~ : SourceLoc) -> Unit raise {
   assert_true(a < b, loc~, msg="`\{a} >= \{b}`")
 }
 

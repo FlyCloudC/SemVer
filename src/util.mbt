@@ -44,7 +44,7 @@ impl Compare for Identifier with compare(self, other) {
       let len_a = a.length()
       let len_b = b.length()
       let len_min = if len_a < len_b { len_a } else { len_b }
-      let x = a.charcodes(end=len_min).compare(b.charcodes(end=len_min))
+      let x = a.view(end_offset=len_min).compare(b.view(end_offset=len_min))
       guard x == 0 else { return x }
       len_a.compare(len_b)
     }
