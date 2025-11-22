@@ -1,10 +1,10 @@
 ///|
-pub fn T::is_pre_release(self : T) -> Bool {
+pub fn Version::is_pre_release(self : Version) -> Bool {
   self.pre_release is Some(_)
 }
 
 ///|
-pub impl Eq for T with equal(self, other) {
+pub impl Eq for Version with equal(self, other) {
   self.major == other.major &&
   self.minor == other.minor &&
   self.patch == other.patch &&
@@ -12,7 +12,7 @@ pub impl Eq for T with equal(self, other) {
 }
 
 ///|
-pub impl Compare for T with compare(self, other) {
+pub impl Compare for Version with compare(self, other) {
   let c1 = self.major.compare(other.major)
   guard c1 == 0 else { return c1 }
   let c2 = self.minor.compare(other.minor)
@@ -71,7 +71,7 @@ fn &Logger::write_array_with_dot(logger : &Logger, arr : Array[String]) -> Unit 
 }
 
 ///|
-pub impl Show for T with output(self, logger) {
+pub impl Show for Version with output(self, logger) {
   logger
   ..write_string(self.major)
   ..write_char('.')

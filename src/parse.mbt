@@ -6,7 +6,7 @@ priv suberror Fail StringView
 /// the Semantic Versioning specification (https://semver.org/).
 /// 
 /// If parsing fails, a `ParseError` is raised indicating the position of the error.
-pub fn parse(view : StringView) -> T raise ParseError {
+pub fn parse(view : StringView) -> Version raise ParseError {
   try {
     let (major, rest) = parse_numeric_identifier(view)
     guard rest is ['.', .. rest] else { raise Fail(rest) }

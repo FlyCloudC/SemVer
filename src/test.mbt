@@ -23,7 +23,7 @@ fn fail_pos(v : String, loc~ : SourceLoc) -> Int raise {
 ///|
 #callsite(autofill(loc))
 #coverage.skip
-fn assert_le(a : T, b : T, loc~ : SourceLoc) -> Unit raise {
+fn assert_le(a : Version, b : Version, loc~ : SourceLoc) -> Unit raise {
   assert_true(a < b, loc~, msg="`\{a} >= \{b}`")
 }
 

@@ -5,7 +5,7 @@ pub enum Identifier {
 } derive(Eq)
 
 ///|
-pub struct T {
+pub struct Version {
   major : String
   minor : String
   patch : String

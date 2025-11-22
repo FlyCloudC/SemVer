@@ -2,7 +2,7 @@
 package "FlyCloudC/SemVer"
 
 // Values
-fn parse(StringView) -> T raise ParseError
+fn parse(StringView) -> Version raise ParseError
 
 // Errors
 pub suberror ParseError Int
@@ -15,17 +15,17 @@ pub enum Identifier {
 }
 impl Eq for Identifier
 
-pub struct T {
+pub struct Version {
   major : String
   minor : String
   patch : String
   pre_release : Array[Identifier]?
   build : Array[String]?
 }
-fn T::is_pre_release(Self) -> Bool
-impl Compare for T
-impl Eq for T
-impl Show for T
+fn Version::is_pre_release(Self) -> Bool
+impl Compare for Version
+impl Eq for Version
+impl Show for Version
 
 // Type aliases
 

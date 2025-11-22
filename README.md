@@ -6,7 +6,7 @@ A [semantic versioning](https://semver.org/) library for MoonBit.
 
 1. A struct representing a semantic version:
 ```mbt
-pub struct T {
+pub struct Version {
   major : String
   minor : String
   patch : String
@@ -18,12 +18,12 @@ pub struct T {
 2. From string:
 ```mbt
 pub suberror ParseError Int derive(Show)
-fn parse(StringView) -> T raise ParseError
+fn parse(StringView) -> Version raise ParseError
 ```
 If parsing fails, a `ParseError` is raised indicating the position of the error.
 
 3. Compare two semantic version:
 ```mbt
-impl Eq for T
-impl Compare for T
+impl Eq for Version
+impl Compare for Version
 ```
