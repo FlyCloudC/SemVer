@@ -18,7 +18,7 @@ pub struct T {
 pub suberror ParseError Int derive(Show)
 
 ///|
-typealias (A, @string.View) as P[A]
+type P[A] = (A, StringView)
 
 ///|
 fn[A, B] map(x : P[A], f : (A) -> B) -> P[B] {

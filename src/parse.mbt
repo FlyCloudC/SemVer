@@ -1,12 +1,12 @@
 ///|
-priv suberror Fail @string.View
+priv suberror Fail StringView
 
 ///|
 /// Parse and handle semantic version strings according to
 /// the Semantic Versioning specification (https://semver.org/).
 /// 
 /// If parsing fails, a `ParseError` is raised indicating the position of the error.
-pub fn parse(view : @string.View) -> T raise ParseError {
+pub fn parse(view : StringView) -> T raise ParseError {
   try {
     let (major, rest) = parse_numeric_identifier(view)
     guard rest is ['.', .. rest] else { raise Fail(rest) }
@@ -24,9 +24,9 @@ pub fn parse(view : @string.View) -> T raise ParseError {
 }
 
 ///|
-fn parse_pre_release(view : @string.View) -> P[Array[Identifier]?] raise Fail {
+fn parse_pre_release(view : StringView) -> P[Array[Identifier]?] raise Fail {
   guard view is ['-', .. rest] else { return (None, view) }
-  fn f(view : @string.View) raise Fail {
+  fn f(view : StringView) raise Fail {
     loop (0, true, view) {
       (end, is_digit, ['0'..='9', .. rest]) => //
         continue (end + 1, is_digit, rest)
@@ -49,9 +49,9 @@ fn parse_pre_release(view : @string.View) -> P[Array[Identifier]?] raise Fail {
 }
 
 ///|
-fn parse_build(view : @string.View) -> P[Array[String]?] raise Fail {
+fn parse_build(view : StringView) -> P[Array[String]?] raise Fail {
   guard view is ['+', .. rest] else { return (None, view) }
-  fn f(view : @string.View) raise Fail {
+  fn f(view : StringView) raise Fail {
     loop (0, view) {
       (end, ['0'..='9' | 'a'..='z' | 'A'..='Z' | '-', .. rest]) =>
         continue (end + 1, rest)
@@ -64,7 +64,7 @@ fn parse_build(view : @string.View) -> P[Array[String]?] raise Fail {
 }
 
 ///|
-fn parse_numeric_identifier(view : @string.View) -> P[String] raise Fail {
+fn parse_numeric_identifier(view : StringView) -> P[String] raise Fail {
   // <numeric identifier> ::= "0"
   //                        | <positive digit>
   //                        | <positive digit> <digits>
@@ -81,8 +81,8 @@ fn parse_numeric_identifier(view : @string.View) -> P[String] raise Fail {
 
 ///|
 fn[A] parse_dot_list(
-  view : @string.View,
-  parse : (@string.View) -> P[A] raise Fail,
+  view : StringView,
+  parse : (StringView) -> P[A] raise Fail,
 ) -> P[Array[A]] raise Fail {
   let (first, rest) = parse(view)
   let result = [first]
@@ -97,7 +97,7 @@ fn[A] parse_dot_list(
 }
 
 ///|
-fn is_numeric_identifier(view : @string.View) -> Bool {
+fn is_numeric_identifier(view : StringView) -> Bool {
   match view {
     "0" => true
     ['1'..='9', .. rest] =>

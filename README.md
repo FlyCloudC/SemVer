@@ -18,7 +18,7 @@ pub struct T {
 2. From string:
 ```mbt
 pub suberror ParseError Int derive(Show)
-fn parse(@string.StringView) -> T raise ParseError
+fn parse(StringView) -> T raise ParseError
 ```
 If parsing fails, a `ParseError` is raised indicating the position of the error.
 

@@ -1,10 +1,10 @@
 ///|
-pub fn is_pre_release(self : T) -> Bool {
+pub fn T::is_pre_release(self : T) -> Bool {
   self.pre_release is Some(_)
 }
 
 ///|
-pub impl Eq for T with op_equal(self, other) {
+pub impl Eq for T with equal(self, other) {
   self.major == other.major &&
   self.minor == other.minor &&
   self.patch == other.patch &&
@@ -53,18 +53,18 @@ impl Compare for Identifier with compare(self, other) {
 
 ///|
 test "order" {
-  // The comparison of @string.View does not follow lexicographical order
+  // The comparison of StringView does not follow lexicographical order
   inspect("alpha"[:].compare("beta"[:]), content="1")
   inspect("alph"[:].compare("beta"[:]), content="-1")
 }
 
 ///|
-fn write_array_with_dot(self : &Logger, arr : Array[String]) -> Unit {
+fn &Logger::write_array_with_dot(logger : &Logger, arr : Array[String]) -> Unit {
   loop arr[:] {
     [] => ()
-    [x] => self.write_string(x)
+    [x] => logger.write_string(x)
     [x, .. rest] => {
-      self..write_string(x)..write_char('.')
+      logger..write_string(x)..write_char('.')
       continue rest
     }
   }

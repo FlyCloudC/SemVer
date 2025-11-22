@@ -1,12 +1,8 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "FlyCloudC/SemVer"
 
-import(
-  "moonbitlang/core/string"
-)
-
 // Values
-fn parse(@string.StringView) -> T raise ParseError
+fn parse(StringView) -> T raise ParseError
 
 // Errors
 pub suberror ParseError Int
